@@ -28,20 +28,17 @@ int main(void) {
     int N = 3;
     log_info("%d ITERATIONS", N);
 
+    printf("--------------------------------------------------\n");
     log_info("0: '%s'", buffer.buff);
     for (int n = 1; n < N+1; ++n) {
         temp.size = 0;
         for (int i = 0; i < buffer.size; ++i) {
-            char c = buffer.buff[i];
-            for (size_t j = 0; j < ARRAY_LEN(rules); ++j) {
-                Rule r = rules[j];
-                if (c == r.from) {
-                    buffer_append(&temp, r.to);
-                }
+            char ch = buffer.buff[i];
+            if (!handle_rule(rules, ARRAY_LEN(rules), ch, &temp)) {
+                buffer_append_char(&temp, ch);
             }
         }
-        memcpy(buffer.buff, temp.buff, temp.size);
-        buffer.size = temp.size;
+        swap_buffers(&buffer, &temp);
         log_info("%d: '%s'", n, buffer.buff);
     }
     return 0;
